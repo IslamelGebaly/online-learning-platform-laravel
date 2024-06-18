@@ -15,10 +15,18 @@ class Course extends Model
     ];
 
     public function instructor(){
-        return $this->belongsTo("users");
+        return $this->belongsTo(User::class, "instructor_id");
     }
 
     public function lessons(){
-        return $this->hasMany("lessons");
+        return $this->hasMany(Lesson::class);
+    }
+
+    public function reviews(){
+        return $this->hasMany(Review::class);
+    }
+
+    public function enrollments(){
+        return $this->hasMany(Enrollment::class);
     }
 }

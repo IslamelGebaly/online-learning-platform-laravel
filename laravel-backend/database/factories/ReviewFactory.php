@@ -17,7 +17,8 @@ class ReviewFactory extends Factory
     public function definition(): array
     {
         return [
-            "content" => fake()->longText()
+            "content" => fake()->realText(),
+            "student_id" => 2,
         ];
     }
 }

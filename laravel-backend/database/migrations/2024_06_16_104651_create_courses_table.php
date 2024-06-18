@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('courses', function (Blueprint $table) {
-
             ///Attributes
             $table->id();
             $table->string('title');

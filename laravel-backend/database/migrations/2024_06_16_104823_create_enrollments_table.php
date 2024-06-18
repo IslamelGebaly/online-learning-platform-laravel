@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('enrollments', function (Blueprint $table) {
             ///Attribute
             $table->id();
-            $table->timestamp("enrolled_at");
             $table->string("status");
+            $table->timestamps();
 
             ///Foreign Keys
             $table->foreignId("student_id")->constrained("users");

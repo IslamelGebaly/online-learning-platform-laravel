@@ -17,8 +17,8 @@ class EnrollmentFactory extends Factory
     public function definition(): array
     {
         return [
-            "status" => fake()->randomElement(["dropped","completed","in_progress"])
-
+            "status" => fake()->randomElement(["dropped","completed","in_progress"]),
+            "student_id" => 2,
         ];
     }
 }
