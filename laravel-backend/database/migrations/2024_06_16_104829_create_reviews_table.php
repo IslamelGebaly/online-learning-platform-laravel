@@ -12,12 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reviews', function (Blueprint $table) {
+            //Attributes
             $table->id();
             $table->longText("content");
             $table->timestamps();
 
             ///Foreign IDs
             $table->foreignId('student_id')->constrained("users");
+            $table->foreignId("course_id")->constrained("reviews");
         });
     }
 

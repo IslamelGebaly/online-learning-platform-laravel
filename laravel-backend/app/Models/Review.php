@@ -14,6 +14,10 @@ class Review extends Model
     ];
 
     public function course(){
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class, "course_id");
+    }
+
+    public function student(){
+        return $this->belongsTo(Course::class, "student_id");
     }
 }
