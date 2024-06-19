@@ -24,22 +24,27 @@ Route::group([
     Route::get("refresh", [UserController::class,"refreshToken"]);
     Route::get("logout", [UserController::class,"logout"]);
 
-    //Course Api
-    Route::post("course/create", [CourseController::class, "store"]);
-    Route::put("course/update", [CourseController::class, "update"]);
-    Route::delete("course/delete", [CourseController::class, "delete"]);
+    //Instructor Role
+    Route::group(["middleware"=> "instructor"], function(){
+        //Course Api
+        Route::post("course/create", [CourseController::class, "store"]);
+        Route::put("course/update", [CourseController::class, "update"]);
+        Route::delete("course/delete", [CourseController::class, "delete"]);
 
-    //Lesson API
-    Route::post("lesson/create", [LessonController::class, "store"]);
-    Route::put("lesson/update", [LessonController::class, "update"]);
-    Route::delete("lesspn/delete", [LessonController::class, "delete"]);
+        //Lesson API
+        Route::post("lesson/create", [LessonController::class, "store"]);
+        Route::put("lesson/update", [LessonController::class, "update"]);
+        Route::delete("lesspn/delete", [LessonController::class, "delete"]);
+    });
 
-    //Enrollment API
-    Route::post("enroll/create", [EnrollmentController::class, "store"]);
-    Route::delete("enroll/drop", [EnrollmentController::class, "delete"]);
+        //Enrollment API
+        Route::group(["middleware"=> "student"], function(){
+        Route::post("enroll/create", [EnrollmentController::class, "store"]);
+        Route::delete("enroll/drop", [EnrollmentController::class, "delete"]);
 
-    //Review API
-    Route::post("review/create", [ReviewController::class,"store"]);
-    Route::put("review/update", [ReviewController::class, "update"]);
-    Route::delete("review/delete", [ReviewController::class, "delete"]);
+        //Review API
+        Route::post("review/create", [ReviewController::class,"store"]);
+        Route::put("review/update", [ReviewController::class, "update"]);
+        Route::delete("review/delete", [ReviewController::class, "delete"]);
+    });
 });

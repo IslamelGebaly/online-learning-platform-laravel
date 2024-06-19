@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,15 +17,22 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
+        $instructorRole = Role::create(["name" => "instructor"]);
+        $studentRole = Role::create(["name"=> "student"]);
+
+        $instructor = User::factory()->create([
             'name' => 'TestInstructor',
             'email' => 'instructor@example.com',
         ]);
 
-        User::factory()->create([
+        $instructor->assignRole('instructor');
+
+        $student = User::factory()->create([
             'name' => 'TestStudent',
             'email' => 'student@example.com',
         ]);
+
+        $student->assignRole('student');
 
         Course::factory()
             ->count(10)
