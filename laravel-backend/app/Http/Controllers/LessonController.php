@@ -29,7 +29,13 @@ class LessonController extends Controller
      */
     public function store(StoreLessonRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        Lesson::create($data);
+        return response()->json([
+            "status" => true,
+            "message"=> "New lesson has been submitted.",
+        ]);
     }
 
     /**
@@ -45,7 +51,7 @@ class LessonController extends Controller
      */
     public function edit(Lesson $lesson)
     {
-        //
+
     }
 
     /**
@@ -53,7 +59,13 @@ class LessonController extends Controller
      */
     public function update(UpdateLessonRequest $request, Lesson $lesson)
     {
-        //
+        $data = $request->validated();
+
+        $lesson->update($data);
+        return response()->json([
+            "status" => true,
+            "message"=> "Lesson has been successfully updated",
+        ]);
     }
 
     /**
@@ -61,6 +73,11 @@ class LessonController extends Controller
      */
     public function destroy(Lesson $lesson)
     {
-        //
+        $lesson->delete();
+
+        return response()->json([
+            "status" => true,
+            "message" => "Message has been successfully deleted"
+        ]);
     }
 }

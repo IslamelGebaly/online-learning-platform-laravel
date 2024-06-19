@@ -29,7 +29,15 @@ class EnrollmentController extends Controller
      */
     public function store(StoreEnrollmentRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data["student_id"] = auth()->user()->id;
+
+        Enrollment::create($data);
+
+        return response()->json([
+            "status" => true,
+            "message"=> "You have in enrolled into the course successfully",
+        ]);
     }
 
     /**
@@ -61,6 +69,10 @@ class EnrollmentController extends Controller
      */
     public function destroy(Enrollment $enrollment)
     {
-        //
+        $enrollment->delete();
+        return response()->json([
+            "status"=> true,
+            "message"=> "Enrollment deleted successfully",
+        ]);
     }
 }
