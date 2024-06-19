@@ -29,7 +29,14 @@ class ReviewController extends Controller
      */
     public function store(StoreReviewRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data["student_id"] = auth()->user()->id;
+
+        Review::create($data);
+        return response()->json([
+            "status"=> "success",
+            "message"=> "New review submitted",
+        ]);
     }
 
     /**

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CourseResource;
+use App\Http\Resources\UserResource;
 use App\Models\Course;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
+use App\Models\User;
 
 class CourseController extends Controller
 {
@@ -13,7 +16,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -21,7 +24,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -29,7 +32,16 @@ class CourseController extends Controller
      */
     public function store(StoreCourseRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data["instructor_id"] = auth()->user()->id;
+
+        Course::create($data);
+
+        return response()->json([
+            "status" => true,
+            "message"=> "New course has been submitted.",
+            "data" => $data
+        ]);
     }
 
     /**
@@ -37,7 +49,11 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        //
+        return response()->json([
+            "status" => true,
+            "message"=> "Showing course",
+            "course" => new CourseResource($course),
+        ]);
     }
 
     /**
@@ -53,7 +69,13 @@ class CourseController extends Controller
      */
     public function update(UpdateCourseRequest $request, Course $course)
     {
-        //
+        $data = $request->validated();
+
+        $course->update($data);
+        return response()->json([
+            "status" => true,
+            "message"=> "Course has been successfully updated",
+        ]);
     }
 
     /**
@@ -61,6 +83,11 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        //
+        $course->delete();
+
+        return response()->json([
+            "status" => true,
+            "message" => "Message has been successfully deleted"
+        ]);
     }
 }

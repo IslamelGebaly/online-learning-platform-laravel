@@ -1,5 +1,6 @@
 <?php
 use Carbon\Laravel\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -127,6 +128,7 @@ return [
 
     'providers' => ServiceProvider::defaultProviders()->merge([
             Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+            RouteServiceProvider::class,
     ])->toArray(),
 
     'aliases' => Facade::defaultAliases()->merge([
