@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -24,7 +25,19 @@ class UserController extends Controller
         $request->validate([
             "email" => "required|email",
             "password" => "required",
+            "role" => Rule::in(["instructor", "student"]),
         ]);
+
+        //Checking whether the user role is correct
+        $users = User::role($request["role"])->get();
+        if (!$users->where("email", $request["email"])->first())
+        {
+            return response()->json([
+                "status" => false,
+                "message" => "Invalid Role",
+            ]);
+        }
+
         //JWTAuth and attempt
         $token = JWTAuth::attempt([
             "email" => $request->email,
@@ -54,11 +67,19 @@ class UserController extends Controller
         $data["password"] = bcrypt($data["password"]);
         $data["email_verified_at"] = now();
 
+        $role = $request["role"];
+        unset($data["role"]);
+
         $user = User::create($data);
+        $user->assignRole($role);
+
+        $payload = ['user_id' => $user->id]; // Replace with minimal user data
+        $token = JWTAuth::fromUser($user, $payload);
 
         return response()->json([
             "status" => true,
-            "message"=> "User created successfully",
+            "message" => "User created successfully",
+            "token" => $token
         ]);
     }
 
