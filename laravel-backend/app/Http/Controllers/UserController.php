@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -49,6 +50,7 @@ class UserController extends Controller
                 "status" => true,
                 "message" => "Logged in successfully",
                 "token" => $token,
+                "user" => new UserResource($users->where("email", $request["email"])->first()),
             ]);
         }
 
@@ -79,7 +81,8 @@ class UserController extends Controller
         return response()->json([
             "status" => true,
             "message" => "User created successfully",
-            "token" => $token
+            "token" => $token,
+            "user" => new UserResource($user),
         ]);
     }
 
