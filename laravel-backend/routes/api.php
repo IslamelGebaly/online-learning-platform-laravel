@@ -5,17 +5,18 @@ use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\CorsMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
+/*Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');
+})->middleware('auth:sanctum');*/
 
+Route::group(["middleware" => CorsMiddleware::class], function() {
 Route::post('register', [UserController::class, "register"]);
 Route::post('login', [UserController::class, "login"]);
-
-
+});
 
 Route::group([
     "middleware" => "auth:api"
@@ -37,8 +38,9 @@ Route::group([
         Route::delete("lesspn/delete", [LessonController::class, "delete"]);
     });
 
+    //Student Role
+    Route::group(["middleware"=> "student"], function(){
         //Enrollment API
-        Route::group(["middleware"=> "student"], function(){
         Route::post("enroll/create", [EnrollmentController::class, "store"]);
         Route::delete("enroll/drop", [EnrollmentController::class, "delete"]);
 
