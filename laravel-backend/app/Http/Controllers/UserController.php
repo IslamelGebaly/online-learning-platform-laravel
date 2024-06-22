@@ -108,14 +108,14 @@ class UserController extends Controller
         ]);
     }
 
-    //Logout (GET)
+    //Logout (POST)
     public function logout(){
         auth()->logout();
 
         return response()->json([
             "status"=> true,
             "message"=> "User logged out successfully",
-            ]);
+        ]);
     }
 
 

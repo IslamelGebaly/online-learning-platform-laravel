@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LessonResource;
 use App\Models\Lesson;
 use App\Http\Requests\StoreLessonRequest;
 use App\Http\Requests\UpdateLessonRequest;
@@ -16,12 +17,13 @@ class LessonController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function courseLessons($id){
+        $lessons = Lesson::where("course_id", $id)->get();
+
+        return response()->json([
+            "status" => true,
+            "lessons" => LessonResource::collection($lessons),
+        ]);
     }
 
     /**
@@ -32,6 +34,7 @@ class LessonController extends Controller
         $data = $request->validated();
 
         Lesson::create($data);
+
         return response()->json([
             "status" => true,
             "message"=> "New lesson has been submitted.",
@@ -41,26 +44,26 @@ class LessonController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Lesson $lesson)
+    public function show($id)
     {
-        //
+        $lesson = Lesson::findOrFail($id);
+        return response()->json([
+            "status" => true,
+            "message"=> "Showing course",
+            "lesson" => new LessonResource($lesson),
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
-     */
-    public function edit(Lesson $lesson)
-    {
-
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLessonRequest $request, Lesson $lesson)
+    public function update(UpdateLessonRequest $request, $id)
     {
         $data = $request->validated();
-
+        $lesson = Lesson::findOrFail($id);
         $lesson->update($data);
         return response()->json([
             "status" => true,
@@ -71,8 +74,9 @@ class LessonController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Lesson $lesson)
+    public function delete($id)
     {
+        $lesson = Lesson::find($id);
         $lesson->delete();
 
         return response()->json([
