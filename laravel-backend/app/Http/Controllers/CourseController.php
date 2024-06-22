@@ -13,25 +13,6 @@ use App\Models\User;
 
 class CourseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreCourseRequest $request)
     {
         $data = $request->validated();
@@ -60,6 +41,32 @@ class CourseController extends Controller
             "lessons" => LessonResource::collection($lessons),
         ]);
     }
+
+    //Return all courses that the user hasn't enrolled in yet
+    public function browseCourses(){
+        //Get the enrollments that belong to the authenticated user
+        $user = auth()->user();
+        try{
+            $enrollments = $user->enrollments();
+            //Get the enrolled courses of the student
+            $enrolledCourses = $enrollments->pluck("course_id");
+            //Get all courses that the user hasn't enrolled in
+            $courses = Course::whereNotIn("id", $enrolledCourses)->get();
+        }catch(\Exception $e){
+            return response()->json([
+                "status"=> false,
+                "message"=> $e->getMessage(),
+                "courses" => [],
+            ]);
+        }
+
+
+        return response()->json([
+            "status"=> true,
+            "courses"=> CourseResource::collection($courses),
+        ]);
+    }
+
 
     //Return all courses taught by one instructor
     public function instructorCourses(){

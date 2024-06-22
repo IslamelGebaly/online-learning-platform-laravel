@@ -18,7 +18,7 @@ class StudentMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (!auth()->user()->hasRole(Role::where("name","student")->first())) {
-            abort(403, 'Unauthorized action.'); // Or redirect to an error page
+            abort(403, auth()->user()->role); // Or redirect to an error page
         }
 
         return $next($request);
