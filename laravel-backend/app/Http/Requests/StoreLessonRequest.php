@@ -25,7 +25,8 @@ class StoreLessonRequest extends FormRequest
             "title" => ["required","string", "max:255"],
             "image_path" => ["nullable", "image"],
             "video_path" => ["nullable", "string"],
-            "supporting_material" => ["nullable", "string"]
+            "supporting_material" => ["nullable", "string"],
+            "course" => ["required", "integer", "exist:courses,id"]
         ];
     }
 }

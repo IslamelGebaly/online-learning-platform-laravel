@@ -6,16 +6,18 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\CorsMiddleware;
+use App\Http\Middleware\InstructorMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*Route::get('/user', function (Request $request) {
+Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');*/
+})->middleware('auth:sanctum');
 
 Route::group(["middleware" => CorsMiddleware::class], function() {
-Route::post('register', [UserController::class, "register"]);
-Route::post('login', [UserController::class, "login"]);
+
+    Route::post('register', [UserController::class, "register"]);
+    Route::post('login', [UserController::class, "login"]);
 });
 
 Route::group([
@@ -23,19 +25,22 @@ Route::group([
 ], function(){
     Route::get("profile", [UserController::class, "profile"]);
     Route::get("refresh", [UserController::class,"refreshToken"]);
-    Route::get("logout", [UserController::class,"logout"]);
+    Route::post("logout", [UserController::class,"logout"]);
 
     //Instructor Role
-    Route::group(["middleware"=> "instructor"], function(){
+    Route::group(["middleware"=> [InstructorMiddleware::class, CorsMiddleware::class]], function(){
         //Course Api
+        Route::get("course/instructor", [CourseController::class, "instructorCourses"]);
         Route::post("course/create", [CourseController::class, "store"]);
-        Route::put("course/update", [CourseController::class, "update"]);
-        Route::delete("course/delete", [CourseController::class, "delete"]);
+        Route::get("course/{id}", [CourseController::class, "show"]);
+        Route::put("course/update/{id}", [CourseController::class, "update"]);
+        Route::delete("course/delete/{id}", [CourseController::class, "delete"]);
 
         //Lesson API
         Route::post("lesson/create", [LessonController::class, "store"]);
-        Route::put("lesson/update", [LessonController::class, "update"]);
-        Route::delete("lesspn/delete", [LessonController::class, "delete"]);
+        Route::get("lesson/{id}", [LessonController::class, "show"]);
+        Route::put("lesson/update/{id}", [LessonController::class, "update"]);
+        Route::delete("lesson/delete/{id}", [LessonController::class, "delete"]);
     });
 
     //Student Role

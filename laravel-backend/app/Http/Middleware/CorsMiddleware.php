@@ -27,10 +27,10 @@ class CorsMiddleware
                 'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin',
             ];
 
-            // Check for preflight request (OPTIONS method)
+                 // Check for preflight request (OPTIONS method)
             if ($request->isMethod('OPTIONS')) {
                 $headers['Access-Control-Allow-Max-Age'] = 60 * 60 * 24; // Allow CORS headers for 24 hours
-                // Return a 200 OK response with CORS headers
+                    // Return a 200 OK response with CORS headers
                 return response('', 200, $headers);
             }
 
