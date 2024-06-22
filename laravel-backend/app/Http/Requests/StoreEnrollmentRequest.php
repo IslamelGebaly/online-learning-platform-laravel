@@ -23,8 +23,9 @@ class StoreEnrollmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "status" => ["required", Rule::in([["dropped","completed","in_progress"]])],
-            "course" => ["required", "integer", "exist:courses,id"],
+            "status" => ["required", Rule::in(["dropped","completed","in_progress"])],
+            "course_id" => ["required", "integer", "exists:courses,id"],
+            "student_id" => ["required", "integer", "exists:users,id"],
         ];
     }
 }

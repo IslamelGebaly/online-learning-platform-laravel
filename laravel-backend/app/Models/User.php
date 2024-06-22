@@ -47,6 +47,10 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    public function enrollments(){
+        return $this->hasMany(Enrollment::class, "student_id");
+    }
+
         /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
